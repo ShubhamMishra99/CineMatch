@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from typing import List, Dict, Tuple, Optional, Any
 from sklearn.metrics.pairwise import cosine_similarity
+from backend.app.core.config import settings
 from backend.app.recommenders.content_based import ContentBasedRecommender
 
 class SemanticRecommender:
@@ -36,8 +37,10 @@ class SemanticRecommender:
     def load_data(self, movies_df: pd.DataFrame):
         self.movies_df = movies_df.copy()
         
-        # Load SentenceTransformer model if the content recommender uses dense embeddings
-        if self.content_recommender.use_dense:
+        # Loading SentenceTransformer also installs/loads PyTorch, which exceeds
+        # the memory available on common free hosting plans. TF-IDF remains a
+        # fully functional semantic-search fallback and is the safe default.
+        if settings.ENABLE_SEMANTIC_MODEL and self.content_recommender.use_dense:
             try:
                 from sentence_transformers import SentenceTransformer
                 print("Loading SentenceTransformer model for query encoding...")
@@ -46,6 +49,8 @@ class SemanticRecommender:
             except Exception as e:
                 print(f"Failed to load dense query encoder: {e}. Falling back to TF-IDF search.")
                 self.dense_model = None
+        else:
+            print("Using lightweight TF-IDF semantic search.")
 
     def extract_filters(self, query: str) -> Dict[str, Any]:
         """Extract structured keyword heuristics from the natural language query."""

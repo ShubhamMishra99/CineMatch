@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     
     # API Keys
     TMDB_API_KEY: str = ""
+
+    # Keep the default deployment lightweight enough for free hosting. Set this
+    # to True only on an instance with enough RAM for PyTorch/SentenceTransformers.
+    ENABLE_SEMANTIC_MODEL: bool = False
     
     # Paths
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
