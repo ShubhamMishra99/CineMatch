@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Request, status
 import pandas as pd
 from typing import Dict, Any, Optional
 from pydantic import BaseModel
+from backend.app.services.tmdb_service import get_movie_poster_url
 
 router = APIRouter()
 
@@ -55,15 +56,7 @@ async def get_movie_details(request: Request, movie_id: int):
     keywords = load_field("keywords")
     cast = load_field("cast")
     
-    # Poster full url (handling pandas NaN values)
-    poster_path = row.get("poster_path")
-    if poster_path and isinstance(poster_path, str) and poster_path.strip() and poster_path.lower() != "nan":
-        clean_path = poster_path.strip()
-        if not clean_path.startswith("/"):
-            clean_path = "/" + clean_path
-        poster_url = f"https://image.tmdb.org/t/p/w500{clean_path}"
-    else:
-        poster_url = None
+    poster_url = get_movie_poster_url(row.to_dict())
     
     return {
         "movie_id": movie_id,

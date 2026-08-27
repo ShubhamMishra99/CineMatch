@@ -75,6 +75,12 @@ export const MovieCard: React.FC<MovieCardProps> = ({
         className="movie-card-poster"
       />
 
+      {/* Keep the essential information readable before hover, even on busy posters. */}
+      <div className="movie-card-info" aria-hidden="true">
+        <h3>{movie.title}</h3>
+        <p>{movie.release_year || "Movie"}{movie.genres.length ? ` · ${movie.genres.slice(0, 2).join(" · ")}` : ""}</p>
+      </div>
+
       {/* Cinematic Hover Overlay */}
       <div className="movie-card-overlay">
         <h3 className="movie-overlay-title">{movie.title}</h3>

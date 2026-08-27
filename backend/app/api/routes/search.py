@@ -3,6 +3,7 @@ import time
 import logging
 import pandas as pd
 from backend.app.models.schemas import SearchRequest, SearchResponse
+from backend.app.services.tmdb_service import get_movie_poster_url
 
 router = APIRouter()
 logger = logging.getLogger("cinematch")
@@ -45,15 +46,7 @@ async def semantic_search(request: Request, payload: SearchRequest):
                 except Exception:
                     genres_list = []
                     
-            # Poster full url (handling pandas NaN values)
-            poster_path = row.get("poster_path")
-            if poster_path and isinstance(poster_path, str) and poster_path.strip() and poster_path.lower() != "nan":
-                clean_path = poster_path.strip()
-                if not clean_path.startswith("/"):
-                    clean_path = "/" + clean_path
-                poster_url = f"https://image.tmdb.org/t/p/w500{clean_path}"
-            else:
-                poster_url = None
+            poster_url = get_movie_poster_url(row.to_dict())
             
             results.append({
                 "movie_id": movie_id,

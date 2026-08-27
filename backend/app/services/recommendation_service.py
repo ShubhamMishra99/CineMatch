@@ -11,6 +11,7 @@ from backend.app.recommenders.semantic import SemanticRecommender
 from backend.app.recommenders.hybrid import HybridRanker
 from backend.app.recommenders.diversity import DiversityReranker
 from backend.app.services.explanation_service import ExplanationService
+from backend.app.services.tmdb_service import get_movie_poster_url
 
 class RecommendationService:
     def __init__(self, use_sample: bool = False):
@@ -139,15 +140,11 @@ class RecommendationService:
                 query=query
             )
             
-            # Map poster path to full TMDB asset URL if present (handling pandas NaN values)
-            poster_path = movie.get("poster_path")
-            if poster_path and isinstance(poster_path, str) and poster_path.strip() and poster_path.lower() != "nan":
-                clean_path = poster_path.strip()
-                if not clean_path.startswith("/"):
-                    clean_path = "/" + clean_path
-                poster_url = f"https://image.tmdb.org/t/p/w500{clean_path}"
-            else:
-                poster_url = None
+            # Ranking candidates contain presentation fields but omit tmdbId. Look
+            # up the original catalog row so TMDB can resolve sparse poster paths.
+            catalog_match = self.movies_df[self.movies_df["movieId"] == movie["movie_id"]]
+            poster_source = catalog_match.iloc[0].to_dict() if not catalog_match.empty else movie
+            poster_url = get_movie_poster_url(poster_source)
             
             movie_rec = {
                 "movie_id": movie["movie_id"],
