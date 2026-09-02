@@ -53,7 +53,10 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({ onFinish }
     return () => clearInterval(messageTimer);
   }, [funnyMessages.length]);
 
-  const progress = ((activeStep + 1) / steps.length) * 100;
+  // Poster downloads can outlive the recommendation request. Keep the visual
+  // progress just short of complete until the parent removes this loader after
+  // every poster has settled.
+  const progress = Math.min(((activeStep + 1) / steps.length) * 100, 90);
 
   return (
     <div className="loading-overlay glass-panel fade-in">
@@ -122,8 +125,8 @@ export const LoadingExperience: React.FC<LoadingExperienceProps> = ({ onFinish }
       </div>
 
       {activeStep === steps.length - 1 && (
-        <p style={{ fontSize: "13px", color: "var(--match-green)", fontWeight: "600", marginTop: "12px" }}>
-          Your recommendations are ready.
+        <p style={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: "600", marginTop: "12px" }}>
+          Finalizing movie posters...
         </p>
       )}
     </div>

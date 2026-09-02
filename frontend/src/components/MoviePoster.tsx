@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Film } from "lucide-react";
 
 interface MoviePosterProps {
@@ -16,9 +16,15 @@ export const MoviePoster: React.FC<MoviePosterProps> = ({
 }) => {
   const [hasError, setHasError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const previousPosterUrl = useRef(posterUrl);
 
-  // Reset states if URL changes
+  // Do not reset on first mount: an already preloaded/cached image can fire
+  // its load event before a normal effect runs, leaving the poster hidden.
+  // Reset only when this mounted card is given a genuinely new poster URL.
   useEffect(() => {
+    if (previousPosterUrl.current === posterUrl) return;
+
+    previousPosterUrl.current = posterUrl;
     setHasError(false);
     setLoading(true);
   }, [posterUrl]);

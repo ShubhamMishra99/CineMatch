@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   Search, Sliders, RefreshCcw, Globe
 } from "lucide-react";
@@ -67,8 +67,8 @@ export const Discover: React.FC<DiscoverProps> = ({
   const [recommendations, setRecommendations] = useState<MovieRecommendation[]>([]);
   const [metadata, setMetadata] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [pipelineLoading, setPipelineLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const recommendationRequestId = useRef(0);
   
   // Details Modal states
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
@@ -92,11 +92,28 @@ export const Discover: React.FC<DiscoverProps> = ({
   };
 
   // Load recommendations from backend
-  const fetchRecommendations = async (queryText?: string, showPipeline = false) => {
+  const preloadPosters = (movies: MovieRecommendation[]) =>
+    Promise.all(
+      movies.map((movie) => {
+        const posterUrl = movie.poster_url;
+        if (!posterUrl) return Promise.resolve();
+
+        return new Promise<void>((resolve) => {
+          const image = new Image();
+          image.onload = () => resolve();
+          // A broken poster renders CineMatch's fallback card, so it should not
+          // keep the page-wide loader visible.
+          image.onerror = () => resolve();
+          image.src = posterUrl;
+        });
+      })
+    );
+
+  // Keep the loading experience visible until both the recommendations and
+  // their poster images are ready. This applies to onboarding and AI searches.
+  const fetchRecommendations = async (queryText?: string) => {
+    const requestId = ++recommendationRequestId.current;
     setLoading(true);
-    if (showPipeline) {
-      setPipelineLoading(true);
-    }
     setError(null);
     try {
       const response = await fetch(`${API_BASE_URL}/recommend`, {
@@ -118,34 +135,41 @@ export const Discover: React.FC<DiscoverProps> = ({
       }
       
       const data: RecommendResponse = await response.json();
+      await preloadPosters(data.recommendations);
+
+      // Ignore an older response when the user starts another search before it
+      // finishes loading.
+      if (requestId !== recommendationRequestId.current) return;
+
       setRecommendations(data.recommendations);
       setMetadata(data.metadata);
     } catch (err: any) {
       console.error(err);
-      setError("Could not connect to CineMatch AI backend. Make sure the FastAPI server is running.");
+      if (requestId === recommendationRequestId.current) {
+        setError("Could not connect to CineMatch AI backend. Make sure the FastAPI server is running.");
+      }
     } finally {
-      setLoading(false);
-      if (!showPipeline) {
-        setPipelineLoading(false);
+      if (requestId === recommendationRequestId.current) {
+        setLoading(false);
       }
     }
   };
 
   // Fetch recommendations on settings change
   useEffect(() => {
-    fetchRecommendations(undefined, false);
+    fetchRecommendations();
   }, [likedIds, dislikedIds, favoriteGenres, diversityMode]);
 
   // Trigger search submit
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchRecommendations(searchQuery, true);
+    fetchRecommendations(searchQuery);
   };
 
   // Suggestion chips handler
   const handleSuggestionClick = (suggestion: typeof SUGGESTIONS[0]) => {
     setSearchQuery(suggestion.query);
-    fetchRecommendations(suggestion.query, true);
+    fetchRecommendations(suggestion.query);
     showToast(`Searching for "${suggestion.text}"...`);
   };
 
@@ -364,55 +388,44 @@ export const Discover: React.FC<DiscoverProps> = ({
             )}
 
             {/* loading state */}
-            {pipelineLoading ? (
+            {loading ? (
               <div style={{ padding: "40px 0" }}>
-                <LoadingExperience onFinish={() => setPipelineLoading(false)} />
-              </div>
-            ) : loading ? (
-              <div className="recommendations-grid">
-                {Array.from({ length: 6 }).map((_, idx) => (
-                  <div key={idx} className="skeleton-card">
-                    <div className="skeleton-poster"></div>
-                    <div className="skeleton-body">
-                      <div className="skeleton-text title"></div>
-                      <div className="skeleton-text meta"></div>
-                      <div className="skeleton-text desc"></div>
-                      <div className="skeleton-text desc-short"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : recommendations.length === 0 && !error ? (
-              <div className="glass-panel" style={{ padding: "80px 40px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-                <InfoIcon size={44} color="var(--text-secondary)" />
-                <h3 style={{ fontSize: "18px", fontWeight: "800", fontFamily: "var(--font-display)" }}>No Recommendations Found</h3>
-                <p style={{ color: "var(--text-secondary)", fontSize: "14px", maxWidth: "420px", textAlign: "center", lineHeight: "1.6" }}>
-                  We couldn't find any recommendations matching your active preferences. Try resetting your search filters or adding more favorite genres.
-                </p>
+                <LoadingExperience />
               </div>
             ) : (
-              <div className="recommendations-grid fade-in">
-                {recommendations.map((movie) => {
-                  const isLiked = likedIds.includes(movie.movie_id);
-                  const isDisliked = dislikedIds.includes(movie.movie_id);
-                  const isSaved = savedIds.includes(movie.movie_id);
+              <>
+                {recommendations.length === 0 && !error ? (
+                  <div className="glass-panel" style={{ padding: "80px 40px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+                    <InfoIcon size={44} color="var(--text-secondary)" />
+                    <h3 style={{ fontSize: "18px", fontWeight: "800", fontFamily: "var(--font-display)" }}>No Recommendations Found</h3>
+                    <p style={{ color: "var(--text-secondary)", fontSize: "14px", maxWidth: "420px", textAlign: "center", lineHeight: "1.6" }}>
+                      We couldn't find any recommendations matching your active preferences. Try resetting your search filters or adding more favorite genres.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="recommendations-grid fade-in">
+                    {recommendations.map((movie) => {
+                      const isLiked = likedIds.includes(movie.movie_id);
+                      const isDisliked = dislikedIds.includes(movie.movie_id);
+                      const isSaved = savedIds.includes(movie.movie_id);
 
-                  return (
-                    <MovieCard 
-                      key={movie.movie_id}
-                      movie={movie}
-                      isLiked={isLiked}
-                      isDisliked={isDisliked}
-                      isSaved={isSaved}
-                      onFeedback={handleFeedback}
-                      onOpenDetails={handleCardClick}
-                      onOpenExplainability={handleOpenExplainability}
-                    />
-                  );
-                })}
-              </div>
+                      return (
+                        <MovieCard
+                          key={movie.movie_id}
+                          movie={movie}
+                          isLiked={isLiked}
+                          isDisliked={isDisliked}
+                          isSaved={isSaved}
+                          onFeedback={handleFeedback}
+                          onOpenDetails={handleCardClick}
+                          onOpenExplainability={handleOpenExplainability}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </>
             )}
-
             {/* Interactive recommendation pipeline visualization */}
             <div id="pipeline-section">
               <RecommendationPipeline />

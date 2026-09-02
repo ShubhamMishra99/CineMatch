@@ -52,6 +52,27 @@ class Settings(BaseSettings):
         "quality": 0.07,
         "popularity": 0.03
     }
+
+    # An explicit search is a statement of current intent, so it uses a
+    # different weighting strategy from the default discovery feed. Content
+    # and collaborative signals still personalize the ordering of relevant
+    # titles, but cannot outweigh query relevance.
+    QUERY_WEIGHTS: Dict[str, float] = {
+        "content": 0.15,
+        "collaborative": 0.10,
+        "semantic": 0.50,
+        "genre": 0.10,
+        "quality": 0.10,
+        "popularity": 0.05,
+    }
+
+    # Query relevance gating controls. The semantic floor is relative to the
+    # strongest retrieved result so it remains valid for either TF-IDF or dense
+    # semantic encoders, whose absolute score ranges differ.
+    QUERY_SEMANTIC_POOL_SIZE: int = 600
+    QUERY_RELEVANCE_FLOOR_RATIO: float = 0.25
+    QUERY_MIN_SEMANTIC_SCORE: float = 0.03
+    QUERY_MMR_RELEVANCE_FLOOR_RATIO: float = 0.75
     
     # Diversity (MMR) Lambda settings
     DIVERSITY_LAMBDA: Dict[str, float] = {
