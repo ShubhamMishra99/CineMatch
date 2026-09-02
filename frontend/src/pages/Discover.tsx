@@ -42,6 +42,7 @@ export const Discover: React.FC<DiscoverProps> = ({
 }) => {
   // Profile settings state
   const [favoriteGenres, setFavoriteGenres] = useState<string[]>(initialGenres);
+  const [draftGenres, setDraftGenres] = useState<string[]>(initialGenres);
   const [likedIds, setLikedIds] = useState<number[]>(initialLiked);
   const [dislikedIds, setDislikedIds] = useState<number[]>([]);
   const [savedIds, setSavedIds] = useState<number[]>([]);
@@ -205,13 +206,27 @@ export const Discover: React.FC<DiscoverProps> = ({
     setIsExplainOpen(true);
   };
 
-  // Genres selection drawer toggling
+  // Keep a draft of genre selections until the user confirms with Apply.
+  useEffect(() => {
+    setDraftGenres(favoriteGenres);
+  }, [favoriteGenres, isTuningOpen]);
+
   const handleToggleGenre = (genre: string) => {
-    if (favoriteGenres.includes(genre)) {
-      setFavoriteGenres(favoriteGenres.filter(g => g !== genre));
-    } else {
-      setFavoriteGenres([...favoriteGenres, genre]);
-    }
+    setDraftGenres((prev) =>
+      prev.includes(genre)
+        ? prev.filter((g) => g !== genre)
+        : [...prev, genre]
+    );
+  };
+
+  const handleApplyPreferences = () => {
+    setFavoriteGenres(draftGenres);
+    setIsTuningOpen(false);
+  };
+
+  const handleCloseTuneDrawer = () => {
+    setDraftGenres(favoriteGenres);
+    setIsTuningOpen(false);
   };
 
   // Handle Cold start settings updates
@@ -409,10 +424,11 @@ export const Discover: React.FC<DiscoverProps> = ({
       {/* Floating Preferences Drawer */}
       <RecommendationControls 
         isOpen={isTuningOpen}
-        onClose={() => setIsTuningOpen(false)}
+        onClose={handleCloseTuneDrawer}
+        onApply={handleApplyPreferences}
         diversityMode={diversityMode}
         setDiversityMode={setDiversityMode}
-        favoriteGenres={favoriteGenres}
+        favoriteGenres={draftGenres}
         onToggleGenre={handleToggleGenre}
         onResetProfile={onResetOnboarding}
         isColdStart={isColdStart}

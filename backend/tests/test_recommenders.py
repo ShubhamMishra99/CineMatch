@@ -5,6 +5,7 @@ import json
 from fastapi.testclient import TestClient
 
 from backend.app.main import app
+from backend.app.services.recommendation_service import RecommendationService
 from backend.app.recommenders.content_based import ContentBasedRecommender
 from backend.app.recommenders.collaborative import CollaborativeRecommender
 from backend.app.recommenders.semantic import SemanticRecommender
@@ -175,6 +176,21 @@ def test_diversity_reranker(mock_movies_df):
     assert len(reranked) == 2
     # Seed (relevance-sorted top item) must remain first
     assert reranked[0]["movie_id"] == 1
+
+def test_recommendation_service_uses_movie_lookup_cache():
+    service = RecommendationService(use_sample=True)
+    service.movies_df = pd.DataFrame([
+        {"movieId": 101, "title": "Alpha"},
+        {"movieId": 202, "title": "Beta"}
+    ])
+
+    row = service._get_movie_row(202)
+
+    assert row is not None
+    assert row["title"] == "Beta"
+    assert service._movie_lookup is not None
+    assert 202 in service._movie_lookup
+
 
 def test_api_health():
     client = TestClient(app)

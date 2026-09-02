@@ -18,6 +18,7 @@ class RecommendationService:
         self.use_sample = use_sample
         self.movies_df = None
         self.ratings_df = None
+        self._movie_lookup: Dict[int, pd.Series] = {}
         
         # Instantiate components
         self.data_loader = DataLoader(use_sample=use_sample)
@@ -39,6 +40,35 @@ class RecommendationService:
             "semantic": False
         }
 
+    def _rebuild_movie_lookup(self):
+        """Build a direct movie-id lookup for O(1) retrieval during recommendation rendering."""
+        if self.movies_df is None:
+            self._movie_lookup = {}
+            return
+
+        self._movie_lookup = {}
+        for _, row in self.movies_df.iterrows():
+            if "movieId" in row and pd.notna(row["movieId"]):
+                self._movie_lookup[int(row["movieId"])] = row
+
+    def _get_movie_row(self, movie_id: int):
+        """Return the metadata row for a movie without re-filtering the full DataFrame."""
+        if self.movies_df is None:
+            return None
+
+        movie_id = int(movie_id)
+        cached_row = self._movie_lookup.get(movie_id)
+        if cached_row is not None:
+            return cached_row
+
+        match = self.movies_df[self.movies_df["movieId"] == movie_id]
+        if match.empty:
+            return None
+
+        row = match.iloc[0]
+        self._movie_lookup[movie_id] = row
+        return row
+
     def initialize(self):
         """Load datasets and initialize models. Run once during startup."""
         print("=== Initializing Recommendation Service ===")
@@ -46,6 +76,7 @@ class RecommendationService:
         
         # 1. Load Data
         self.movies_df, self.ratings_df = self.data_loader.load_data()
+        self._rebuild_movie_lookup()
         
         # 2. Initialize Content-Based Recommender (and check for dense embeddings)
         embeddings = None
@@ -72,6 +103,19 @@ class RecommendationService:
             
         # 4. Initialize Semantic Recommender
         self.semantic_recommender.load_data(self.movies_df)
+        if settings.ENABLE_SEMANTIC_MODEL and self.semantic_recommender.dense_model is not None:
+            if not os.path.exists(embeddings_path):
+                print("Generating dense semantic embeddings for faster prompt-aware recommendations...")
+                dense_embeddings = self.semantic_recommender.build_dense_embeddings()
+                if dense_embeddings is not None:
+                    np.save(embeddings_path, dense_embeddings)
+                    print(f"Saved semantic embeddings to {embeddings_path}")
+            else:
+                try:
+                    self.content_recommender.embeddings = np.load(embeddings_path)
+                    self.content_recommender.use_dense = True
+                except Exception as e:
+                    print(f"Error loading saved dense embeddings: {e}")
         self.models_loaded["semantic"] = True
         
         # 5. Initialize Hybrid and Explanation
@@ -141,9 +185,9 @@ class RecommendationService:
             )
             
             # Ranking candidates contain presentation fields but omit tmdbId. Look
-            # up the original catalog row so TMDB can resolve sparse poster paths.
-            catalog_match = self.movies_df[self.movies_df["movieId"] == movie["movie_id"]]
-            poster_source = catalog_match.iloc[0].to_dict() if not catalog_match.empty else movie
+            # up the original catalog row directly so TMDB can resolve sparse poster paths.
+            catalog_row = self._get_movie_row(movie["movie_id"])
+            poster_source = catalog_row.to_dict() if catalog_row is not None else movie
             poster_url = get_movie_poster_url(poster_source)
             
             movie_rec = {

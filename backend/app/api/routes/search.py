@@ -31,12 +31,10 @@ async def semantic_search(request: Request, payload: SearchRequest):
         
         results = []
         for movie_id, score in recommendations:
-            # Retrieve movie metadata
-            movie_row = rec_service.movies_df[rec_service.movies_df["movieId"] == movie_id]
-            if movie_row.empty:
+            # Retrieve movie metadata without scanning the full DataFrame for each result.
+            row = rec_service._get_movie_row(movie_id)
+            if row is None:
                 continue
-                
-            row = movie_row.iloc[0]
             
             # Genres
             genres_list = row.get("genres", [])

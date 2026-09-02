@@ -36,21 +36,63 @@ class SemanticRecommender:
 
     def load_data(self, movies_df: pd.DataFrame):
         self.movies_df = movies_df.copy()
-        
-        # Loading SentenceTransformer also installs/loads PyTorch, which exceeds
-        # the memory available on common free hosting plans. TF-IDF remains a
-        # fully functional semantic-search fallback and is the safe default.
-        if settings.ENABLE_SEMANTIC_MODEL and self.content_recommender.use_dense:
+
+        if settings.ENABLE_SEMANTIC_MODEL:
             try:
                 from sentence_transformers import SentenceTransformer
-                print("Loading SentenceTransformer model for query encoding...")
+                print("Loading SentenceTransformer model for real semantic search...")
                 self.dense_model = SentenceTransformer("all-MiniLM-L6-v2")
                 print("Dense query encoder loaded.")
             except Exception as e:
                 print(f"Failed to load dense query encoder: {e}. Falling back to TF-IDF search.")
                 self.dense_model = None
         else:
+            self.dense_model = None
             print("Using lightweight TF-IDF semantic search.")
+
+    def build_dense_embeddings(self) -> Optional[np.ndarray]:
+        """Create real semantic embeddings for movie metadata so prompt similarity works at scale."""
+        if self.movies_df is None or self.dense_model is None:
+            return None
+
+        texts = []
+        for _, row in self.movies_df.iterrows():
+            genres = row.get("genres", [])
+            if isinstance(genres, str):
+                try:
+                    genres = eval(genres)
+                except Exception:
+                    genres = []
+
+            keywords = row.get("keywords", [])
+            if isinstance(keywords, str):
+                try:
+                    keywords = eval(keywords)
+                except Exception:
+                    keywords = []
+
+            cast = row.get("cast", [])
+            if isinstance(cast, str):
+                try:
+                    cast = eval(cast)
+                except Exception:
+                    cast = []
+
+            overview = str(row.get("overview", ""))
+            text = " ".join([
+                overview,
+                " ".join(genres),
+                " ".join(keywords),
+                " ".join(cast),
+                str(row.get("director", "")),
+                str(row.get("title", ""))
+            ])
+            texts.append(text)
+
+        embeddings = self.dense_model.encode(texts, show_progress_bar=False, convert_to_numpy=True)
+        self.content_recommender.embeddings = embeddings
+        self.content_recommender.use_dense = True
+        return embeddings
 
     def extract_filters(self, query: str) -> Dict[str, Any]:
         """Extract structured keyword heuristics from the natural language query."""

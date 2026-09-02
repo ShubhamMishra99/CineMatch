@@ -12,9 +12,10 @@ class Settings(BaseSettings):
     # API Keys
     TMDB_API_KEY: str = ""
 
-    # Keep the default deployment lightweight enough for free hosting. Set this
-    # to True only on an instance with enough RAM for PyTorch/SentenceTransformers.
-    ENABLE_SEMANTIC_MODEL: bool = False
+    # Real semantic search is enabled by default for better prompt-to-movie matching.
+    # This uses sentence-transformers when installed; if not available, the app falls back
+    # to the TF-IDF semantic matcher automatically.
+    ENABLE_SEMANTIC_MODEL: bool = True
     
     # Paths
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))

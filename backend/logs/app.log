@@ -78,3 +78,90 @@
 [2026-08-27 21:37:17] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=5, query='emotional but hopeful drama', strategy=hybrid_warm_user, latency_ms=2403.64
 [2026-08-27 21:37:19] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=5, query='mind-bending sci-fi space travel', strategy=hybrid_warm_user, latency_ms=2068.96
 [2026-08-27 21:37:22] INFO [cinematch:feedback.py:16] - User Feedback: user_id=1, movie_id=2571, feedback_type='like'
+[2026-08-27 21:37:25] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=6, query='mind-bending sci-fi space travel', strategy=hybrid_warm_user, latency_ms=2405.77
+[2026-08-27 21:53:20] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-08-27 21:53:20] INFO [cinematch:main.py:49] - Starting CineMatch AI server...
+[2026-08-27 21:53:34] INFO [cinematch:main.py:59] - Recommendation service initialized successfully.
+[2026-08-27 21:53:36] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1860.58
+[2026-08-27 21:53:38] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1790.56
+[2026-08-27 21:53:44] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1839.46
+[2026-08-27 21:53:46] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1865.6
+[2026-08-27 21:55:01] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=234.22
+[2026-08-27 21:55:03] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1745.56
+[2026-08-27 21:57:12] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1860.85
+[2026-08-27 21:57:14] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1926.01
+[2026-08-27 22:01:14] INFO [cinematch:main.py:67] - Shutting down CineMatch AI server...
+[2026-08-27 22:01:17] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-08-27 22:01:17] INFO [cinematch:main.py:49] - Starting CineMatch AI server...
+[2026-08-27 22:01:31] INFO [cinematch:main.py:59] - Recommendation service initialized successfully.
+[2026-08-27 22:01:31] INFO [cinematch:main.py:67] - Shutting down CineMatch AI server...
+[2026-08-27 22:10:47] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-08-27 22:10:47] INFO [cinematch:main.py:49] - Starting CineMatch AI server...
+[2026-08-27 22:11:02] INFO [cinematch:main.py:59] - Recommendation service initialized successfully.
+[2026-08-27 22:11:24] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=0, query='None', strategy=cold_start, latency_ms=143.09
+[2026-08-27 22:14:37] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-08-27 22:14:37] INFO [cinematch:main.py:49] - Starting CineMatch AI server...
+[2026-08-27 22:14:50] INFO [cinematch:main.py:59] - Recommendation service initialized successfully.
+[2026-08-27 22:15:18] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=5429.93
+[2026-08-27 22:15:19] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1100.87
+[2026-08-27 22:15:37] INFO [cinematch:feedback.py:16] - User Feedback: user_id=1, movie_id=48774, feedback_type='like'
+[2026-08-27 22:15:40] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=2477.21
+[2026-08-27 22:15:57] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=0, query='None', strategy=cold_start, latency_ms=3943.79
+[2026-08-27 22:16:01] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=1, query='None', strategy=sparse_history, latency_ms=4112.53
+[2026-08-27 22:16:24] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=1, query='None', strategy=sparse_history, latency_ms=2862.54
+[2026-08-27 22:16:25] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=1, query='None', strategy=sparse_history, latency_ms=1097.1
+[2026-08-27 22:16:33] INFO [cinematch:feedback.py:16] - User Feedback: user_id=1, movie_id=32587, feedback_type='like'
+[2026-08-27 22:16:35] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1687.35
+[2026-08-27 22:17:39] INFO [cinematch:main.py:67] - Shutting down CineMatch AI server...
+[2026-08-27 23:27:13] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 15:38:57] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 15:48:37] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 15:49:27] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 18:57:44] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 18:57:44] INFO [cinematch:main.py:49] - Starting CineMatch AI server...
+[2026-09-02 18:57:44] INFO [cinematch:main.py:59] - Recommendation service initialized successfully.
+[2026-09-02 18:58:18] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=4317.36
+[2026-09-02 18:58:20] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=1026.09
+[2026-09-02 18:58:59] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=9018.56
+[2026-09-02 18:59:02] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=2715.98
+[2026-09-02 18:59:14] INFO [cinematch:feedback.py:16] - User Feedback: user_id=1, movie_id=1200, feedback_type='like'
+[2026-09-02 18:59:21] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=4, query='None', strategy=hybrid_warm_user, latency_ms=7064.52
+[2026-09-02 18:59:50] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=4, query='None', strategy=hybrid_warm_user, latency_ms=6839.52
+[2026-09-02 18:59:56] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=4, query='None', strategy=hybrid_warm_user, latency_ms=6786.88
+[2026-09-02 19:00:04] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=4, query='None', strategy=hybrid_warm_user, latency_ms=7261.13
+[2026-09-02 19:00:08] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=4, query='None', strategy=hybrid_warm_user, latency_ms=4187.0
+[2026-09-02 19:00:12] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=4, query='None', strategy=hybrid_warm_user, latency_ms=4327.63
+[2026-09-02 19:00:16] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=4, query='None', strategy=hybrid_warm_user, latency_ms=3227.03
+[2026-09-02 19:02:52] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=5175.04
+[2026-09-02 19:02:55] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=2990.02
+[2026-09-02 19:04:47] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=6028.05
+[2026-09-02 19:04:52] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=5672.47
+[2026-09-02 19:11:00] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 19:11:09] INFO [cinematch:main.py:67] - Shutting down CineMatch AI server...
+[2026-09-02 19:11:15] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 19:11:15] INFO [cinematch:main.py:49] - Starting CineMatch AI server...
+[2026-09-02 19:12:10] INFO [cinematch:main.py:59] - Recommendation service initialized successfully.
+[2026-09-02 19:12:57] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='hi', strategy=sparse_history, latency_ms=8088.11
+[2026-09-02 19:18:21] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='hi', strategy=sparse_history, latency_ms=4550.92
+[2026-09-02 19:18:27] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=6215.61
+[2026-09-02 19:18:30] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=3427.3
+[2026-09-02 19:20:28] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=966.02
+[2026-09-02 19:20:29] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=2, query='None', strategy=sparse_history, latency_ms=992.11
+[2026-09-02 19:21:10] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=3607.67
+[2026-09-02 19:21:12] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=1822.85
+[2026-09-02 19:21:15] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=2707.69
+[2026-09-02 19:21:20] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='None', strategy=sparse_history, latency_ms=4386.45
+[2026-09-02 19:21:41] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='I need movie like mad unicorn', strategy=sparse_history, latency_ms=6011.23
+[2026-09-02 19:22:21] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='Today MY MOOD SAYING FOR ROMANTIC MOVIE\', strategy=sparse_history, latency_ms=5393.85
+[2026-09-02 19:22:32] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='Today MY MOOD SAYING FOR ROMANTIC MOVIE\', strategy=sparse_history, latency_ms=4052.99
+[2026-09-02 19:23:57] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='emotional but hopeful drama', strategy=sparse_history, latency_ms=3811.34
+[2026-09-02 19:24:04] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='hidden gem movie under 2 hours', strategy=sparse_history, latency_ms=3013.37
+[2026-09-02 19:24:14] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='epic space adventure interstellar travel', strategy=sparse_history, latency_ms=6259.36
+[2026-09-02 19:24:22] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='mind-bending sci-fi space travel', strategy=sparse_history, latency_ms=5427.43
+[2026-09-02 19:24:42] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='mind-bending sci-fi space travel', strategy=sparse_history, latency_ms=5683.52
+[2026-09-02 19:24:57] INFO [cinematch:recommend.py:38] - Recommendations generated: user_id=1, liked_count=3, query='hidden gem movie under 2 hours', strategy=sparse_history, latency_ms=6086.95
+[2026-09-02 19:25:24] INFO [cinematch:main.py:67] - Shutting down CineMatch AI server...
+[2026-09-02 19:25:28] INFO [cinematch:logging.py:42] - Logging configured successfully.
+[2026-09-02 19:25:28] INFO [cinematch:main.py:49] - Starting CineMatch AI server...
+[2026-09-02 19:25:46] INFO [cinematch:main.py:59] - Recommendation service initialized successfully.
+[2026-09-02 19:25:46] INFO [cinematch:main.py:67] - Shutting down CineMatch AI server...

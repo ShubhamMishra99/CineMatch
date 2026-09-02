@@ -4,6 +4,7 @@ import { X, RefreshCcw, Heart, ThumbsDown, Bookmark } from "lucide-react";
 interface RecommendationControlsProps {
   isOpen: boolean;
   onClose: () => void;
+  onApply: () => void;
   diversityMode: string;
   setDiversityMode: (mode: string) => void;
   favoriteGenres: string[];
@@ -25,6 +26,7 @@ const ALL_GENRES = [
 export const RecommendationControls: React.FC<RecommendationControlsProps> = ({
   isOpen,
   onClose,
+  onApply,
   diversityMode,
   setDiversityMode,
   favoriteGenres,
@@ -146,7 +148,7 @@ export const RecommendationControls: React.FC<RecommendationControlsProps> = ({
 
         {/* Close Button / Save */}
         <div className="drawer-footer">
-          <button className="accent-btn" onClick={onClose} style={{ width: "100%" }}>
+          <button className="accent-btn" onClick={onApply} style={{ width: "100%" }}>
             Apply preferences
           </button>
         </div>

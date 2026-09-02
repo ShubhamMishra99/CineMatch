@@ -30,14 +30,12 @@ async def get_movie_details(request: Request, movie_id: int):
             detail="Recommendation engine is not fully initialized."
         )
         
-    movie_row = rec_service.movies_df[rec_service.movies_df["movieId"] == movie_id]
-    if movie_row.empty:
+    row = rec_service._get_movie_row(movie_id)
+    if row is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Movie with ID {movie_id} not found."
         )
-        
-    row = movie_row.iloc[0]
     
     # Parse lists from string JSONs
     def load_field(field_name):
